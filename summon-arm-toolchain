@@ -1,14 +1,13 @@
 #!/bin/bash
 # Written by Uwe Hermann <uwe@hermann-uwe.de>, released as public domain.
 # Modified by Piotr Esden-Tempski <piotr@esden.net>, released as public domain.
+# Modified by Jean-Michel Friedt <friedtj@free.fr>, released as public domain.
 
 #
 # Requirements (example is for Debian, replace package names as needed):
 #
 # apt-get install flex bison libgmp3-dev libmpfr-dev libncurses5-dev \
 # libmpc-dev autoconf texinfo build-essential libftdi-dev zlib1g-dev git
-#
-# Or on Ubuntu Maverick give `apt-get build-dep gcc-4.5` a try.
 #
 
 # Stop if any command fails
@@ -20,14 +19,12 @@ set -e
 # You can also pass them as parameters to the script
 ##############################################################################
 TARGET=arm-none-eabi		# Or: TARGET=arm-elf
-PREFIX=${HOME}/sat	# Install location of your final toolchain
-DARWIN_OPT_PATH=/usr/local	# Path in which MacPorts or Fink is installed
+PREFIX=${HOME}/sat		# Install location of your final toolchain
+# DARWIN_OPT_PATH=/usr/local	# Path in which MacPorts or Fink is installed
 # Set to 'sudo' if you need superuser privileges while installing
 SUDO=
 # Set to 1 to be quieter while running
 QUIET=0
-# Set to 1 to use linaro gcc instead of the FSF gcc
-USE_LINARO=1
 # Set to 1 to enable building of OpenOCD
 OOCD_EN=1
 # Set to 'master' or a git revision number to use instead of stable version
@@ -58,17 +55,14 @@ while [ $# -gt 0 ]; do
 		PREFIX=*)
 		PREFIX=$(echo $1 | sed 's,^PREFIX=,,')
 		;;
-		DARWIN_OPT_PATH=*)
-		DARWIN_OPT_PATH=$(echo $1 | sed 's,^DARWIN_OPT_PATH=,,')
-		;;
+#		DARWIN_OPT_PATH=*)
+#		DARWIN_OPT_PATH=$(echo $1 | sed 's,^DARWIN_OPT_PATH=,,')
+#		;;
 		SUDO=*)
 		SUDO=$(echo $1 | sed 's,^SUDO=,,')
 		;;
 		QUIET=*)
 		QUIET=$(echo $1 | sed 's,^QUIET=,,')
-		;;
-		USE_LINARO=*)
-		USE_LINARO=$(echo $1 | sed 's,^USE_LINARO=,,')
 		;;
 		OOCD_EN=*)
 		OOCD_EN=$(echo $1 | sed 's,^OOCD_EN=,,')
@@ -100,10 +94,9 @@ done
 echo "Settings used for this build are:"
 echo "TARGET=$TARGET"
 echo "PREFIX=$PREFIX"
-echo "DARWIN_OPT_PATH=$DARWIN_OPT_PATH"
+#echo "DARWIN_OPT_PATH=$DARWIN_OPT_PATH"
 echo "SUDO=$SUDO"
 echo "QUIET=$QUIET"
-echo "USE_LINARO=$USE_LINARO"
 echo "OOCD_EN=$OOCD_EN"
 echo "OOCD_GIT=$OOCD_GIT"
 echo "LIBSTM32_EN=$LIBSTM32_EN"
@@ -114,32 +107,18 @@ echo "CPUS=$CPUS"
 ##############################################################################
 # Version and download url settings section
 ##############################################################################
-if [ ${USE_LINARO} == 0 ] ; then
-	# For FSF GCC:
-	GCCVERSION=4.7.2
-	GCC=gcc-${GCCVERSION}
-	GCCURL=http://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.gz
+# For FSF GCC:
+GCCVERSION=14.2.0
+GCC=gcc-${GCCVERSION}
+GCCURL=http://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.gz
 
-	# For FSF GDB:
-	GDBVERSION=7.5.1
-	GDB=gdb-${GDBVERSION}
-	GDBURL=http://ftp.gnu.org/gnu/gdb/${GDB}.tar.bz2
-else
-	# For Linaro GCC:
-	GCCRELEASE=4.7-2013.01
-	GCCVERSION=4.7-2013.01
-	GCC=gcc-linaro-${GCCVERSION}
-	GCCURL=http://launchpad.net/gcc-linaro/4.7/${GCCRELEASE}/+download/${GCC}.tar.bz2
+# For FSF GDB:
+GDBVERSION=15.2
+GDB=gdb-${GDBVERSION}
+GDBURL=http://ftp.gnu.org/gnu/gdb/${GDB}.tar.gz
 
-	# For Linaro GDB:
-	GDBRELEASE=7.5-2012.12-1
-	GDBVERSION=7.5-2012.12-1
-	GDB=gdb-linaro-${GDBVERSION}
-	GDBURL=http://launchpad.net/gdb-linaro/7.5/${GDBRELEASE}/+download/${GDB}.tar.bz2
-fi
-
-BINUTILS=binutils-2.23.1
-NEWLIB=newlib-2.0.0
+BINUTILS=binutils-2.43.1
+NEWLIB=newlib-4.4.0.20231231
 OOCD=openocd-0.6.1
 OOCD_GIT=
 LIBCMSIS=
@@ -213,23 +192,23 @@ case "$(uname)" in
 	Linux)
 	echo "Found Linux OS."
 	;;
-	Darwin)
-	echo "Found Darwin OS."
-	GCCFLAGS="${GCCFLAGS} \
-                  --with-gmp=${DARWIN_OPT_PATH} \
-	          --with-mpfr=${DARWIN_OPT_PATH} \
-	          --with-mpc=${DARWIN_OPT_PATH} \
-		  --with-libiconv-prefix=${DARWIN_OPT_PATH}"
-	OOCD_CFLAGS="-I/opt/mine/include -I${DARWIN_OPT_PATH}/include"
-	OOCD_LDFLAGS="-L/opt/mine/lib -L${DARWIN_OPT_PATH}/lib"
-	if gcc --version | grep llvm-gcc > /dev/null ; then
-		echo "Found you are using llvm gcc, switching to clang for gcc compile."
-		GCC_CC=llvm-gcc
-	fi
-	;;
-	CYGWIN*)
-	echo "Found CygWin that means Windows most likely."
-	;;
+#	Darwin)
+#	echo "Found Darwin OS."
+#	GCCFLAGS="${GCCFLAGS} \
+#                  --with-gmp=${DARWIN_OPT_PATH} \
+#	          --with-mpfr=${DARWIN_OPT_PATH} \
+#	          --with-mpc=${DARWIN_OPT_PATH} \
+#		  --with-libiconv-prefix=${DARWIN_OPT_PATH}"
+#	OOCD_CFLAGS="-I/opt/mine/include -I${DARWIN_OPT_PATH}/include"
+#	OOCD_LDFLAGS="-L/opt/mine/lib -L${DARWIN_OPT_PATH}/lib"
+#	if gcc --version | grep llvm-gcc > /dev/null ; then
+#		echo "Found you are using llvm gcc, switching to clang for gcc compile."
+#		GCC_CC=llvm-gcc
+#	fi
+#	;;
+#	CYGWIN*)
+#	echo "Found CygWin that means Windows most likely."
+#	;;
 	*)
 	echo "Found unknown OS. Aborting!"
 	exit 1
@@ -342,7 +321,7 @@ if [ ${OOCD_EN} != 0 ]; then
 	if [ "x${OOCD_GIT}" == "x" ]; then
 		fetch ${OOCD} http://sourceforge.net/projects/openocd/files/openocd/0.6.1/${OOCD}.tar.bz2
 	else
-		clone oocd ${OOCD_GIT} git://openocd.git.sourceforge.net/gitroot/openocd/openocd ./bootstrap
+		clone oocd ${OOCD_GIT} https://openocd.git.sourceforge.net/gitroot/openocd/openocd ./bootstrap
 	fi
 fi
 
@@ -352,7 +331,7 @@ if [ ${LIBSTM32_EN} != 0 ]; then
 		exit 1
 		#fetch ${LIBCMSIS} http://.../${LIBCMSIS}.tar.bz2
 	else
-		clone libcmsis ${LIBCMSIS_GIT} git://github.com/esden/libcmsis.git
+		clone libcmsis ${LIBCMSIS_GIT} https://github.com/esden/libcmsis.git
 	fi
 
 	if [ "x${LIBSTM32_GIT}" == "x" ]; then
@@ -360,7 +339,7 @@ if [ ${LIBSTM32_EN} != 0 ]; then
 		exit 1
 		#fetch ${LIBSTM32} http://.../${LIBSTM32}.tar.bz2
 	else
-		clone libstm32 ${LIBSTM32_GIT} git://github.com/esden/libstm32.git
+		clone libstm32 ${LIBSTM32_GIT} https://github.com/esden/libstm32.git
 	fi
 
 	if [ "x${LIBSTM32USB_GIT}" == "x" ]; then
@@ -368,7 +347,7 @@ if [ ${LIBSTM32_EN} != 0 ]; then
 		exit 1
 		#fetch ${LIBSTM32USB} http://.../${LIBSTM32USB}.tar.bz2
 	else
-		clone libstm32usb ${LIBSTM32USB_GIT} git://github.com/esden/libstm32usb.git
+		clone libstm32usb ${LIBSTM32USB_GIT} https://github.com/esden/libstm32usb.git
 	fi
 fi
 
@@ -378,7 +357,7 @@ if [ ${LIBOPENCM3_EN} != 0 ]; then
 		exit 1
 		#fetch ${LIBOPENCM3} http://.../${LIBOPENCM3}.tar.bz2
 	else
-		clone libopencm3 ${LIBOPENCM3_GIT} git://github.com/libopencm3/libopencm3.git
+		clone libopencm3 ${LIBOPENCM3_GIT} https://github.com/libopencm3/libopencm3.git
 	fi
 fi
 
@@ -392,7 +371,6 @@ if [ ! -e ${STAMPS}/${BINUTILS}.build ]; then
     unpack ${BINUTILS}
     log "Patching binutils to allow SVC support on cortex-m3"
     cd ${BINUTILS}
-    patch -p0 -i ../patches/patch-binutils-2.23.1-svc-cortexm3.diff
     cd ..
     cd build
     log "Configuring ${BINUTILS}"
@@ -425,8 +403,6 @@ if [ ! -e ${STAMPS}/${GCC}-${NEWLIB}.build ]; then
     if [ ${DEFAULT_TO_CORTEX_M3} == 0 ] ; then
 	log "Patching gcc to add multilib support"
 	cd ${GCC}
-	patch -p0 -i ../patches/patch-gcc-config-arm-t-arm-elf.diff
-	patch -p0 -i ../patches/patch-libgcc-divide-exceptions.diff
 	cd ..
     fi
 
@@ -496,7 +472,6 @@ if [ ! -e ${STAMPS}/${OOCD}.build ]; then
     unpack ${OOCD}
     log "Patching openocd to support arm7m registers"
     cd ${OOCD}
-    patch -p1 -i ../patches/patch-openocd-arm7m-registers.diff
     cd ..
     cd build
     log "Configuring openocd-${OOCD}"
@@ -571,9 +546,10 @@ if [ ! -e ${STAMPS}/${LIBOPENCM3}.build ]; then
     unpack ${LIBOPENCM3}
     cd ${LIBOPENCM3}
     log "Building ${LIBOPENCM3}"
-    make PREFIX=${TARGET} DESTDIR=${DESTDIR}${DESTDIR:+/}${PREFIX}
-    install ${LIBOPENCM3} PREFIX=${TARGET} DESTDIR=${DESTDIR}${DESTDIR:+/}${PREFIX} install
+    make PREFIX=${TARGET}- DESTDIR=${DESTDIR}${DESTDIR:+/}${PREFIX}
+    # install ${LIBOPENCM3} PREFIX=${TARGET} DESTDIR=${DESTDIR}${DESTDIR:+/}${PREFIX} install
     cd ..
+    cp -r ${LIBOPENCM3} ${PREFIX}/libopencm3
     log "Cleaning up ${LIBOPENCM3}"
     touch ${STAMPS}/${LIBOPENCM3}.build
     rm -rf ${LIBOPENCM3}

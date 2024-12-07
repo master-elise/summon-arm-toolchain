@@ -1,41 +1,18 @@
-PUBLIC ANNOUNCEMENT!
-====================
+## Script for building a baremetal cross-compilation framework for GNU/Linux targeting ARM cores
 
-THIS PROJECT IS NOT UNDER ACTIVE DEVELOPMENT ANY MORE.
+Aims at demonstrating that in 2024 it is still possible to compile one's tools despite the continuous changes
+in APIs of GCC/Newlib and dependencies. Tested on Debian GNU/Linux sid (Dec. 2024).
 
-THERE IS A BETTER REPLACEMENT FOR THIS!
-
-Since not so long ago there is a very good toolchain available that replaces summon-arm-toolchain. Is better tested and there are more people working on it.
-
-Consider visiting:
-
-https://launchpad.net/gcc-arm-embedded
+Once completed, make sure to add ``$HOME/sat/bin`` to your ``$PATH`` to access the cross-compilation toolchain.
 
 REMEMBER!
 =========
 THE RESULTING TOOLCHAIN IS FOR BARE BONE ARM PROCESSOR SOFTWARE. NOT FOR USE
 WITH GLIBC OR THE LINUX KERNEL. DO NOT EVEN BOTHER TO ASK FOR THAT!
 
-Contact
-=======
-You can find developers and users of this script on freenode IRC network in
-#summon-arm-toolchain channel. Feel free to join us and ask questions.
-
-Remember if you have a question it may take some time untill someone answers so
-ask your question and wait for a while untill someone sees your message. 10min
-is not long enough. :)
-
-If you don't have an irc client installed you can use the web interface here:
-http://webchat.freenode.net/?channels=summon-arm-toolchain&uio=d4
-
 To compile the ARM toolchain for barebone ARM devices:
 ======================================================
-* git clone https://github.com/esden/summon-arm-toolchain.git
- or
-* wget https://github.com/esden/summon-arm-toolchain/zipball/master; unzip master
-* cd *summon-arm-toolchain*
-* ./summon-arm-toolchain
-* Profit
+* git clone https://github.com/master-elise/summon-arm-toolchain.git
 
 Command line options
 ====================
@@ -52,12 +29,6 @@ PREFIX=
 
 By default the installation prefix is "$(HOME)/sat" you can change it to "/usr" then the binaries will be installed into "/usr/bin" and the toolchain specific
 files in "/usr/arm-none-eabi" assuming you did not change the TARGET variable.
-
-DARWIN_OPT_PATH=
-----------------
-
-When compiling on Mac OS X the build script has to know where MacPorts or Fink
-is installed. The default value is "/opt/local".
 
 SUDO=
 -----
@@ -131,22 +102,7 @@ Currently tested and known to work target platforms:
 Currently tested and known to work host platforms:
 ==================================================
 
-* Linux 32bit and 64bit (Debian unstable)
-* Mac OS X Snow Leopard with MacPorts
-
-Notes for Mac OS X users:
-=========================
-
-For Mac OS X there are a few dependencies which must be installed. The wget
-and libftdi packages are required and gmp, mpfr, mpc and libiconv are needed
-by GCC-4.5.1. These can be installed using MacPorts, DarwinPorts or fink.
-
-  $ port install gmp mpfr libmpc wget libftdi git-core py27-yaml python_select
-
-
-
-For XML support in gdb you may want to install expat too. And add the 
---with-expat parameter to the GDB target.
+* Linux 64bit (Debian unstable)
 
 Notes for Linux users:
 ====================== 
@@ -182,12 +138,6 @@ You can list available combinations by running:
 
   $ arm-none-eabi-gcc -print-multi-lib
 
-Known Bugs:
-===========
-- linaro gcc compilation exits without an apparent error
-  Sometimes the compilation of GCC exits without any error, RERUNNING the sat
-  script manages to compile a working gcc though.
-
 Stable tarball downloads and GIT cloning
 ========================================
 
@@ -200,33 +150,3 @@ respective branch or SHA instead of downloading the stable version.
 If you provide a GIT branch name the script will contact the GIT server and
 query the associated SHA. If this SHA is already present in the sources
 directory it will not attempt to reclone the repository.
-
-How to submit improvements and patches
-======================================
-
-As more and more people start to submit patches and improvements to
-Summon-Arm-Toolchain (SAR) this section seems to become necessary.
-
-First of all any way of submission is appreciated, if you just want to dump
-your version of the script to us feel free to do so. Still if you want your
-improvements and fixes to go upstream quicker there is a good way to do that.
-
-1) Create an account on GitHub (or some other git hosting service, if you
-   really have to).
-2) Fork the main SAR repository.
-3) Clone the forked repository to your disk.
-4) Change the script, try to make small changes adding one feature or bugfix at
-   a time (that makes review much easier for us).
-5) Push your changes to GitHub, or the other service you chose.
-6) Test your changes, by compiling the toolchain (you probably want to do that
-   with different options).
-7) Make sure that everything still works.
-8) Test a little bit more.
-9) Click on "pull request" on GitHub or drop us a line so that we can pull your
-   changes.
-
-I know that sounds like a lot of work, but if you don't we have to do it and
-that means that your awesome improvement or bugfix will take longer to be
-integrated into the official script. And as you, we want everyone to profit
-from such changes sooner then later. :)
-
