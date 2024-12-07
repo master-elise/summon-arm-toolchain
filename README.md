@@ -11,7 +11,7 @@ is questionable (requires ``-L $HOME/smt/include`` to find the linker scripts), 
 these files. However a [change in behaviour](https://stackoverflow.com/questions/73429929/gnu-linker-elf-has-a-load-segment-with-rwx-permissions-embedded-arm-project)
 of GCC now leads to a linker warning when compiling the example with
 ```
-msp430-elf-gcc -mmcu=msp430f149 -L$HOME/smt/include factorial
+msp430-elf-gcc -mmcu=msp430f149 -L$HOME/smt/include factorial.c
 ```
 stating
 ```
