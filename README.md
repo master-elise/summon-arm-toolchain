@@ -5,7 +5,7 @@ in APIs of GCC/Newlib and dependencies. Tested on Debian GNU/Linux sid (Dec. 202
 
 Once completed, make sure to add ``$HOME/sat/bin`` to your ``$PATH`` to access the cross-compilation toolchain.
 
-For MSP430, we must rely on [https://www.ti.com/tool/MSP430-GCC-OPENSOURCE](TI's opensource tools) to add
+For MSP430, we must rely on [TI's opensource tools](https://www.ti.com/tool/MSP430-GCC-OPENSOURCE) to add
 linker scripts for the various microcontrollers. While user linker scripts located in ``include/`` directory
 is questionable (requires ``-L $HOME/smt/include`` to find the linker scripts), this is where TI/Mitto locates
 these files. However a [change in behaviour](https://stackoverflow.com/questions/73429929/gnu-linker-elf-has-a-load-segment-with-rwx-permissions-embedded-arm-project)
