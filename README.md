@@ -1,9 +1,24 @@
-## Script for building a baremetal cross-compilation framework for GNU/Linux targeting ARM cores
+## Script for building a baremetal cross-compilation framework for GNU/Linux targeting ARM and MSP430 cores
 
 Aims at demonstrating that in 2024 it is still possible to compile one's tools despite the continuous changes
-in APIs of GCC/Newlib and dependencies. Tested on Debian GNU/Linux sid (Dec. 2024).
+in APIs of GCC/Newlib and dependencies. Tested on Debian GNU/Linux sid (Dec. 2024). 
 
 Once completed, make sure to add ``$HOME/sat/bin`` to your ``$PATH`` to access the cross-compilation toolchain.
+
+For MSP430, we must rely on [https://www.ti.com/tool/MSP430-GCC-OPENSOURCE](TI's opensource tools) to add
+linker scripts for the various microcontrollers. While user linker scripts located in ``include/`` directory
+is questionable (requires ``-L $HOME/smt/include`` to find the linker scripts), this is where TI/Mitto locates
+these files. However a [change in behaviour](https://stackoverflow.com/questions/73429929/gnu-linker-elf-has-a-load-segment-with-rwx-permissions-embedded-arm-project)
+of GCC now leads to a linker warning when compiling the example with
+```
+msp430-elf-gcc -mmcu=msp430f149 -L$HOME/smt/include factorial
+```
+stating
+```
+msp430-elf/bin/ld: warning: a.out has a LOAD segment with RWX permissions
+```
+To remove this warning, edit ``$HOME/smt/include/msp430f149.ld`` and add the ``READONLY`` option
+to the linker script entry ``.rodata2 (READONLY):``
 
 REMEMBER!
 =========
