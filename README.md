@@ -42,7 +42,7 @@ riscv32-elf-gcc -c -Wall -O0 -g -fmessage-length=0 --specs=nosys.specs -march=rv
 riscv32-elf-gcc ../common/gd32vf103xb_boot.o main.o ../common/device_headers/n200_func.o -Wall -Wl,--no-relax -Wl,--gc-sections -nostdlib -nostartfiles -lc -lgcc --specs=nosys.specs -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -T./../common/gd32vf103xb.ld -o main.elf
 ```
 
-<img src="figures/longan_jtag.jpg">
+<img src="figures/longan_jtag.png">
 
 From there, in a first terminal, assuming the Longan Nano is connected through a Digilent HS2 JTAG probe:
 ```
