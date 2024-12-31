@@ -3,7 +3,16 @@
 Aims at demonstrating that in 2024 it is still possible to compile one's tools despite the continuous changes
 in APIs of GCC/Newlib and dependencies. Tested on Debian GNU/Linux sid (Dec. 2024). 
 
-Once completed, make sure to add ``$HOME/sat/bin`` to your ``$PATH`` to access the cross-compilation toolchain.
+Once completed, make sure to add ``$HOME/sxt/bin`` to your ``$PATH`` to access the cross-compilation toolchain, with ``x`` being ``a`` for ARM, ``m`` for MSP430 or ``v`` for RISC-V
+
+# Dependencies
+
+For OpenOCD:
+```
+sudo apt install libftdi-dev
+```
+
+# Comments on MSP430
 
 For MSP430, we must rely on [TI's opensource tools](https://www.ti.com/tool/MSP430-GCC-OPENSOURCE) to add
 linker scripts for the various microcontrollers. While user linker scripts located in ``include/`` directory
@@ -19,6 +28,36 @@ msp430-elf/bin/ld: warning: a.out has a LOAD segment with RWX permissions
 ```
 To remove this warning, edit ``$HOME/smt/include/msp430f149.ld`` and add the ``READONLY`` option
 to the linker script entry ``.rodata2 (READONLY):``
+
+# Comments on RISC-V
+
+Tested on the Longan Nano board fitted with its GigaDevice GD32VF103. Go to the ``opensource-toolchain-gd32vf103``
+submodule and into its ``GD32VF103_baremetal_examples/hello_riscv/``, replace ``riscv-none-`` with ``riscv32-`` in
+its ``Makefile``, copy ``factorial.c`` from this repository to overwrite ``main.c`` and ``make`` to generate ``main.elf``
+according to
+```
+riscv32-elf-gcc -x assembler-with-cpp -c -O0 -Wall -fmessage-length=0 -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -I./../common/device_headers ../common/gd32vf103xb_boot.S -o ../common/gd32vf103xb_boot.o
+riscv32-elf-gcc -c -Wall -O0 -g -fmessage-length=0 --specs=nosys.specs -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -I./../common/device_headers main.c -o main.o
+riscv32-elf-gcc -c -Wall -O0 -g -fmessage-length=0 --specs=nosys.specs -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -I./../common/device_headers ../common/device_headers/n200_func.c -o ../common/device_headers/n200_func.o
+riscv32-elf-gcc ../common/gd32vf103xb_boot.o main.o ../common/device_headers/n200_func.o -Wall -Wl,--no-relax -Wl,--gc-sections -nostdlib -nostartfiles -lc -lgcc --specs=nosys.specs -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -T./../common/gd32vf103xb.ld -o main.elf
+```
+
+<img src="figures/longan_jtag.jpg">
+
+From there, in a first terminal, assuming the Longan Nano is connected through a Digilent HS2 JTAG probe:
+```
+openocd -f "interface/ftdi/digilent-hs2.cfg" -f ./riscv_openocd.cfg
+```
+and in another terminal
+```
+riscv32-elf-gdb main.elf
+target extended-remote localhost:3333
+load
+break 22
+continue
+print val
+```
+returns 120 which is indeed 5!, demonstrating proper execution on the target.
 
 REMEMBER!
 =========

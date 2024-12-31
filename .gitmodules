@@ -1,0 +1,3 @@
+[submodule "opensource-toolchain-gd32vf103"]
+	path = opensource-toolchain-gd32vf103
+	url = https://github.com/cjacker/opensource-toolchain-gd32vf103
