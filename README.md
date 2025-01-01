@@ -59,6 +59,26 @@ print val
 ```
 returns 120 which is indeed 5!, demonstrating proper execution on the target.
 
+<img src="figures/longan_arm-usb-tiny_jtag.jpg">
+
+Similarly with an Olimex ARM-USB-TINY JTAG probe (above),
+
+```$ openocd -f "interface/ftdi/olimex-jtag-tiny.cfg" -f ./riscv_openocd.cfg
+Info : clock speed 8000 kHz
+Info : JTAG tap: riscv.cpu tap/device found: 0x1000563d (mfg: 0x31e (Andes Techn
+ology Corporation), part: 0x0005, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x790007a3 (mfg: 0x3d1 (GigaDevice 
+Semiconductor (Beijing) Inc), part: 0x9000, ver: 0x7)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x79000
+7a3"
+Info : datacount=4 progbufsize=2
+Info : Examined RISC-V core; found 1 harts
+Info :  hart 0: XLEN=32, misa=0x40901105
+Info : starting gdb server for riscv.cpu on 3333
+Info : Listening on port 3333 for gdb connections
+```
+
+
 REMEMBER!
 =========
 THE RESULTING TOOLCHAIN IS FOR BARE BONE ARM PROCESSOR SOFTWARE. NOT FOR USE
