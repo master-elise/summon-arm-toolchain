@@ -78,6 +78,23 @@ Info : starting gdb server for riscv.cpu on 3333
 Info : Listening on port 3333 for gdb connections
 ```
 
+<img src="figures/longan_buspiratev3.png">
+
+Similarly with a Bus Pirate v3 (and *not* v4) (above),
+
+```
+$ openocd -f "./buspirate.cfg" -c "transport select jtag" -f riscv_openocd.cfg 
+Info : Buspirate JTAG Interface ready!
+Info : This adapter doesn't support configurable speed
+Info : JTAG tap: riscv.cpu tap/device found: 0x1000563d (mfg: 0x31e (Andes Technology Corporation), part: 0x0005, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x790007a3 (mfg: 0x3d1 (GigaDevice Semiconductor (Beijing) Inc), part: 0x9000, ver: 0x7)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x790007a3"
+Info : datacount=4 progbufsize=2
+Info : Examined RISC-V core; found 1 harts
+Info :  hart 0: XLEN=32, misa=0x40901105
+Info : starting gdb server for riscv.cpu on 3333
+Info : Listening on port 3333 for gdb connections
+```
 
 REMEMBER!
 =========
