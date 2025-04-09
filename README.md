@@ -1,6 +1,6 @@
-## Script for building a baremetal cross-compilation framework for GNU/Linux targeting ARM and MSP430 cores
+## Script for building a baremetal cross-compilation framework for GNU/Linux targeting ARM, RISC-V and MSP430 cores
 
-Aims at demonstrating that in 2024 it is still possible to compile one's tools despite the continuous changes
+Aims at demonstrating that in 2025 it is still possible to compile one's tools despite the continuous changes
 in APIs of GCC/Newlib and dependencies. Tested on Debian GNU/Linux sid (Dec. 2024). 
 
 Once completed, make sure to add ``$HOME/sxt/bin`` to your ``$PATH`` to access the cross-compilation toolchain, with ``x`` being ``a`` for ARM, ``m`` for MSP430 or ``v`` for RISC-V
