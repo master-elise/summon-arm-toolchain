@@ -6,8 +6,11 @@ in APIs of GCC/Newlib and dependencies. Tested on Debian GNU/Linux sid (Dec. 202
 Once completed, make sure to add ``$HOME/sxt/bin`` to your ``$PATH`` to access the cross-compilation toolchain, with ``x`` being ``a`` for ARM, ``m`` for MSP430 or ``v`` for RISC-V
 
 # Dependencies
-
-For OpenOCD:
+Make sure 
+```bash
+sudo apt install libmpfr-dev libmpc-dev libgmp-dev
+```
+are installed. For OpenOCD:
 ```
 sudo apt install libftdi-dev
 ```
