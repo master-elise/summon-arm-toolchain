@@ -88,17 +88,17 @@ echo "CPUS=$CPUS"
 # Version and download url settings section
 ##############################################################################
 # For FSF GCC:
-GCCVERSION=14.2.0
+GCCVERSION=16.1.0
 GCC=gcc-${GCCVERSION}
 GCCURL=http://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.gz
 
 # For FSF GDB:
-GDBVERSION=15.2
+GDBVERSION=17.2
 GDB=gdb-${GDBVERSION}
 GDBURL=http://ftp.gnu.org/gnu/gdb/${GDB}.tar.gz
 
-BINUTILS=binutils-2.43.1
-NEWLIB=newlib-4.4.0.20231231
+BINUTILS=binutils-2.46.0
+NEWLIB=newlib-4.6.0.20260123
 OOCD=openocd-0.6.1
 OOCD_GIT=
 LIBCMSIS=
@@ -281,7 +281,7 @@ cd ${SOURCES}
 
 fetch ${BINUTILS} http://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
 fetch ${GCC} ${GCCURL}
-fetch ${NEWLIB} ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz
+fetch ${NEWLIB} https://sourceware.org/ftp/newlib/${NEWLIB}.tar.gz
 fetch ${GDB} ${GDBURL}
 
 if [ ${OOCD_EN} != 0 ]; then
